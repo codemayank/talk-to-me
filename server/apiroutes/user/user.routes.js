@@ -7,6 +7,7 @@ const passport = require('passport')
 const User = require('./user.model')
 const _ = require('lodash')
 const authenticate = require('../middlewares/authenticate').AuthCheck
+const log = require('../../logger')
 
 router.get(
   '/signin/google',
@@ -108,6 +109,20 @@ router.post('/reset-password/:token', (req, res) => {
     .catch(e => {
       console.log('error in changing the password', e)
       res.status(400).send()
+    })
+})
+
+/**
+ * Friend Management system APIs
+ */
+
+router.get('/user-list', authenticate, (req, res) => {
+  User.find({})
+    .then(userList => {
+      res.send({ userList })
+    })
+    .catch(e => {
+      log.error('error getting user list', e)
     })
 })
 

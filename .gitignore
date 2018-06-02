@@ -2,3 +2,5 @@ project3.txt
 .env
 .DS_STORE
 node_modules
+info.log
+error.log

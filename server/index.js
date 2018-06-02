@@ -36,7 +36,15 @@ app.use(async (req, res, next) => {
 })
 
 //Error handler - all uncaught exceptions will percolate up to here
-
+app.use(async (res, next) => {
+  try {
+    await next()
+  } catch (err) {
+    res.status = err.status || 500
+    res.body = err.message
+    log.error(`Request Error ${ctx.url} - ${err.message}`)
+  }
+})
 //Mount models
 const User = require('./apiroutes/user/user.model')
 
