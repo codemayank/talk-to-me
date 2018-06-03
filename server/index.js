@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 const path = require('path')
 const log = require('./logger')
 const userRoutes = require('./apiroutes/user/user.routes')
+const friendShipRoutes = require('./apiroutes/friendships/friendship.routes')
 const mongoose = require('mongoose')
 
 //connect to database
@@ -36,20 +37,22 @@ app.use(async (req, res, next) => {
 })
 
 //Error handler - all uncaught exceptions will percolate up to here
-app.use(async (res, next) => {
+app.use(async (req, res, next) => {
   try {
     await next()
   } catch (err) {
     res.status = err.status || 500
     res.body = err.message
-    log.error(`Request Error ${ctx.url} - ${err.message}`)
+    log.error(`Request Error ${res.url} - ${err.message}`)
   }
 })
+
 //Mount models
 const User = require('./apiroutes/user/user.model')
 
 //Mount routes
 app.use('/user', userRoutes)
+app.use('/friendship', friendShipRoutes)
 
 //start the app
 app.listen(port, () => {

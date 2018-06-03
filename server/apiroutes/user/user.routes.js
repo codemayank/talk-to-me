@@ -40,7 +40,7 @@ router.post('/register', (req, res) => {
       if (err) {
         return res.status(400).send(err)
       }
-      res.send('registration successful')
+
       req.logIn(newUser, err => {
         if (err) {
           return res.status(401).send(err)
@@ -125,5 +125,4 @@ router.get('/user-list', authenticate, (req, res) => {
       log.error('error getting user list', e)
     })
 })
-
 module.exports = router

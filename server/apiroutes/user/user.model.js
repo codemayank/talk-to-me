@@ -26,6 +26,14 @@ let userSchema = new mongoose.Schema({
   google_id: {
     type: String
   },
+
+  notifications: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Notification'
+    }
+  ],
+
   resetPasswordToken: String,
   resetPasswordExpires: Date
 })
