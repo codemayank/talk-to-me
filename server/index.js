@@ -21,6 +21,10 @@ const port = process.env.PORT || 5000
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
+//configure client
+const publicPath = path.join(__dirname, '../dist')
+app.use(express.static(publicPath))
+
 //configure passport
 const passport = require('passport')
 const passportSetup = require('./passport.setup')

@@ -1,0 +1,17 @@
+body {
+  background: #fafafa;
+}
+
+.demo-layout-waterfall
+  .mdl-layout__header-row
+  .mdl-navigation__link:last-of-type {
+  padding-right: 0;
+}
+
+.home-main-content {
+  padding-top: 20px;
+}
+
+a {
+  cursor: pointer;
+}

@@ -1,0 +1,108 @@
+<div class="demo-layout-waterfall mdl-layout mdl-js-layout">
+    <header class="mdl-layout__header mdl-layout__header--waterfall">
+        <!-- Top row, always visible -->
+        <div class="mdl-layout__header-row">
+            <!-- Title -->
+            <span class="mdl-layout-title">Talk-To-Me</span>
+            <div class="mdl-layout-spacer"></div>
+            <a class="mdl-navigation__link">Login</a>
+            <a class="mdl-navigation__link" href="/#!/reset-password/noToken">Forgot-Password</a>
+
+        </div>
+    </header>
+    <div class="mdl-layout__drawer">
+        <span class="mdl-layout-title">Talk-To-me</span>
+        <nav class="mdl-navigation">
+            <a class="mdl-navigation__link">Login</a>
+            <a class="mdl-navigation__link" href="/#!/reset-password/noToken">Forgot-Password</a>
+
+        </nav>
+    </div>
+    <main class="mdl-layout__content">
+        <div class="page-content">
+            <!-- Your content goes here -->
+            <div class="home-main-content">
+                <div class="mdl-grid">
+                    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-phone">
+                        <form ng-submit="vm.onUserRegister()">
+                            <div class="mdl-grid">
+                                <div class="mdl-cell mdl-cell--8-col">
+                                    <h6>Register New User!</h6>
+                                </div>
+                                <div class="mdl-cell mdl-cell--8-col">
+                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                        <input class="mdl-textfield__input" ng-model="vm.regForm.username" type="text" id="regUsername" required>
+                                        <label class="mdl-textfield__label" for="regUsername">UserName</label>
+                                    </div>
+                                </div>
+                                <div class="mdl-cell mdl-cell--8-col">
+                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                        <input class="mdl-textfield__input" ng-model="vm.regForm.email" type="email" id="regEmail" required>
+                                        <label class="mdl-textfield__label" for="regEmail">Email</label>
+
+                                    </div>
+                                </div>
+                                <div class="mdl-cell mdl-cell--8-col">
+                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                        <input class="mdl-textfield__input" ng-model="vm.reg.password" type="password" id="regPassword" required>
+                                        <label class="mdl-textfield__label" for="regPassword">Password</label>
+                                    </div>
+                                </div>
+                                <div class="mdl-cell mdl-cell--8-col">
+                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                        <input class="mdl-textfield__input" ng-model="vm.reg.confirmPassword" type="password" id="regConfirmPassword" required>
+                                        <label class="mdl-textfield__label" for="regConfirmPassword">Confirm Password</label>
+                                        <span ng-if="vm.showRegFormError" class="mdl-textfield__error">{{vm.showRegFormError}}</span>
+
+                                    </div>
+                                </div>
+                                <div class="mdl-cell mdl-cell--8-col">
+
+                                    <button class="mdl-button mdl-js-button mdl-button--primary" type="submit">
+                                        Register!
+                                    </button>
+
+                                    <button class="mdl-button mdl-js-button mdl-button--accent">
+                                        Google Signin
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-phone">
+
+                        <form ng-submit="vm.onUserLogin()">
+                            <div class="mdl-grid">
+                                <div class="mdl-cell mdl-cell--8-col">
+                                    <h6>Login!</h6>
+                                </div>
+                                <div class="mdl-cell mdl-cell--8-col">
+                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                        <input class="mdl-textfield__input" ng-model="vm.loginForm.email" type="email" id="loginEmail" required>
+                                        <label class="mdl-textfield__label" for="loginEmail">Email</label>
+
+                                    </div>
+                                </div>
+                                <div class="mdl-cell mdl-cell--8-col">
+                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                        <input class="mdl-textfield__input" ng-model="vm.loginForm.password" type="password" id="loginPassword" required>
+                                        <label class="mdl-textfield__label" for="loginPassword">Password</label>
+                                    </div>
+                                </div>
+                                <div class="mdl-cell mdl-cell--8-col">
+                                    <button class="mdl-button mdl-js-button mdl-button--primary" type="submit">
+                                        Login!
+                                    </button>
+
+                                    <button class="mdl-button mdl-js-button mdl-button--accent">
+                                        Google Signin
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

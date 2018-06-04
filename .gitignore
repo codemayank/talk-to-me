@@ -4,3 +4,6 @@ project3.txt
 node_modules
 info.log
 error.log
+playground
+.vscode/
+dist/

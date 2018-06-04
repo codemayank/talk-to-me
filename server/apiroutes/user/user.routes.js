@@ -95,9 +95,7 @@ router.post('/forgot-password', (req, res) => {
     })
 })
 router.get('/reset-password/:token', (req, res) => {
-  res.redirect(
-    '/#!/reset-password/' + req.params.token + '/' + req.params.userType
-  )
+  res.redirect('/#!/reset-password/' + req.params.token)
 })
 router.post('/reset-password/:token', (req, res) => {
   console.log(req.body)
