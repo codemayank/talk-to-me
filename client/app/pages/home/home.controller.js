@@ -1,8 +1,9 @@
 class HomeComponentController {
-  constructor(UserService) {
+  constructor(UserService, $location) {
     'ngInject'
     this.appTitle = 'Talk-To-Me!'
     this.userService = UserService
+    this.location = $location
   }
 
   onUserRegister() {
@@ -12,6 +13,7 @@ class HomeComponentController {
         .registerUser(this.regForm)
         .then(data => {
           console.log('logging user data', data)
+          this.location.path('/user/dashboard')
         })
         .catch(e => {
           console.log('error registering user', e)
@@ -26,6 +28,7 @@ class HomeComponentController {
       .loginUser(this.loginForm)
       .then(data => {
         console.log('user logged in', data)
+        this.location.path('/user/dashboard')
       })
       .catch(e => {
         console.log('errorin authenticating the user', e)

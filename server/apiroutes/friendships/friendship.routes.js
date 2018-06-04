@@ -10,7 +10,6 @@ const log = require('../../logger')
 router.post('/friend-request', authenticate, (req, res) => {
   let friendId = req.body.friendId
   if (friendId == req.user._id) {
-    friend
     return res.status(401).send()
   }
   FriendShip.findOne({
@@ -32,11 +31,16 @@ router.post('/friend-request', authenticate, (req, res) => {
           friendShip: newFriendShip,
           requester: req.user
         })
-        res.send('friend request successfully registered')
+        FriendShip.populate(newFriendShip, {
+          path: 'friend1 friend2',
+          select: 'username'
+        }).then(friendShip => {
+          res.send({ newFriendShip: friendShip })
+        })
       })
     })
     .catch(e => {
-      log.error('could not register friend request')
+      log.error('could not register friend request', e)
       res.status(400).send()
     })
 })
@@ -48,6 +52,7 @@ router.get('/friend-request/accept/:id', authenticate, (req, res) => {
     { confirmed: true },
     { new: true }
   )
+    .populate('friend1 friend2', 'username')
     .then(friendShip => {
       if (!friendShip) {
         return res.status(401).send()
@@ -56,7 +61,7 @@ router.get('/friend-request/accept/:id', authenticate, (req, res) => {
         friendShip: friendShip,
         acceptor: req.user
       })
-      res.send('friend added')
+      res.send({ friendShip })
     })
     .catch(e => {
       log.error('unable to confirm firend request', e)
@@ -68,12 +73,13 @@ router.get('/friend-request/accept/:id', authenticate, (req, res) => {
 router.get('/friend-request/cancel/:id', authenticate, (req, res) => {
   let id = req.params.id
   FriendShip.findByIdAndRemove({ _id: id })
+    .populate('friend1 friend2', 'username')
     .then(friendShip => {
       notificationEvents.emit('fRCancelled', {
         friendShip: friendShip,
         cancellor: req.user
       })
-      res.send('friend request cancelled')
+      res.send({ friendShip })
     })
     .catch(e => {
       log.error('friend request cancelled', e)

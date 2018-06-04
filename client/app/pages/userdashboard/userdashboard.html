@@ -1,0 +1,99 @@
+<!-- Simple header with fixed tabs. -->
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+            <!-- Title -->
+            <span class="mdl-layout-title">{{vm.user.username}}</span>
+            <div class="mdl-layout-spacer"></div>
+            <a ng-click="vm.onLogout()" class="mdl-navigation__link">Logout</a>
+
+        </div>
+        <!-- Tabs -->
+        <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
+            <a href="#scroll-tab-1" class="mdl-layout__tab is-active">Friends</a>
+            <a href="#scroll-tab-2" class="mdl-layout__tab">People</a>
+            <a href="#scroll-tab-3" class="mdl-layout__tab">Friend Requests</a>
+            <a href="#scroll-tab-4" class="mdl-layout__tab">Notifications</a>
+
+        </div>
+    </header>
+    <div class="mdl-layout__drawer">
+        <span class="mdl-layout-title">{{vm.user.username}}</span>
+
+        <a ng-click="vm.onLogout()" class="mdl-navigation__link">Logout</a>
+
+
+    </div>
+    <main class="mdl-layout__content">
+        <section class="mdl-layout__tab-panel is-active" id="scroll-tab-1">
+            <div class="page-content">
+                <!-- Your content goes here -->
+                <ul>
+                    Friends List
+                    <li ng-repeat="friend in vm.myFriends">
+                        <span ng-if="friend.friend1._id !== vm.user._id">{{friend.friend1.username}}</span>
+                        <span ng-if="friend.friend2._id !== vm.user._id">{{friend.friend2.username}}</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <section class="mdl-layout__tab-panel" id="scroll-tab-2">
+            <div class="page-content">
+                <!-- Your content goes here -->
+                <h6>Users List</h6>
+                <ul>
+                    <li ng-repeat="user in vm.users">
+                        {{user.username}}
+                        <a ng-click="vm.onSendFriendRequest(user._id)">Friend Request</a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <section class="mdl-layout__tab-panel" id="scroll-tab-3">
+            <div class="page-content">
+                <!-- Your content goes here -->
+                <div class="main-content">
+                    <h6>Pending Friend Requests</h6>
+                    <div class="mdl-grid">
+                        <div class="mdl-cell mdl-cell--6-col">
+                            <h6>Requests that you sent</h6>
+                            <ul>
+                                <li ng-repeat="friendRequest in vm.fromFriendRequestPending">
+                                    {{friendRequest.friend2.username}}
+                                    <a ng-click="vm.onCancelFriendRequest(friendRequest._id, 1)">Cancel Request</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="mdl-cell mdl-cell--6-col">
+                            <h6>Requests that you received</h6>
+                            <ul>
+                                <li ng-repeat="friendRequest in vm.toFriendRequestPending">
+                                    {{friendRequest.friend1.username}}
+                                    <a ng-click="vm.onAcceptFriendRequest(friendRequest._id)">Accept Request</a>
+                                    <a ng-click="vm.onCancelFriendRequest(friendRequest._id, 2)">Decline Request</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="mdl-layout__tab-panel" id="scroll-tab-4">
+            <div class="page-content">
+                <!-- Your content goes here -->
+                <div class="main-content">
+                    <h6>Notifications</h6>
+                    <ul>
+                        <li ng-repeat="notification in vm.user.notifications">
+                            {{notification.message}}{{notification.createdAt}}
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+
+
+        </section>
+    </main>
+</div>

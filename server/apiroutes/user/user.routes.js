@@ -8,6 +8,7 @@ const User = require('./user.model')
 const _ = require('lodash')
 const authenticate = require('../middlewares/authenticate').AuthCheck
 const log = require('../../logger')
+const FriendShip = require('../friendships/friendship.model')
 
 router.get(
   '/signin/google',
@@ -110,17 +111,70 @@ router.post('/reset-password/:token', (req, res) => {
     })
 })
 
-/**
- * Friend Management system APIs
- */
+router.get('/status', authenticate, (req, res) => {
+  res.status(200).send(true)
+})
 
-router.get('/user-list', authenticate, (req, res) => {
-  User.find({})
-    .then(userList => {
-      res.send({ userList })
+router.get('/details', authenticate, (req, res) => {
+  FriendShip.find({
+    $or: [{ friend1: req.user._id }, { friend2: req.user._id }]
+  })
+    .populate('friend1 friend2', 'username')
+
+    .then(friendships => {
+      let friendShips = friendships
+
+      return User.find({}, 'username')
+        .lean()
+        .then(users => {
+          users.splice(
+            users.findIndex(
+              x => x._id.toHexString() === req.user._id.toHexString()
+            ),
+            1
+          )
+          let usersList = users
+
+          friendShips.forEach(friendShip => {
+            users.forEach(user => {
+              if (
+                friendShip.friend1._id.toHexString() ===
+                  user._id.toHexString() ||
+                friendShip.friend2._id.toHexString() === user._id.toHexString()
+              ) {
+                usersList.splice(
+                  usersList.findIndex(x => x._id === user._id),
+                  1
+                )
+                console.log('logging users list', usersList)
+              }
+            })
+          })
+
+          User.populate(req.user, { path: 'notifications' }).then(user => {
+            res.send({
+              usersList: usersList,
+              friendShips: friendShips,
+              user: req.user
+            })
+          })
+        })
     })
     .catch(e => {
-      log.error('error getting user list', e)
+      log.error('error getting friend list for user', e)
     })
 })
+
+// router.get('/user-list', authenticate, (req, res) => {
+//   User.find({}, 'username email')
+//     .lean()
+//     .then(userList => {
+//       userList.splice(userList.findIndex(x => x._id == req.user._id), 1)
+
+//       res.send({ userList })
+//     })
+//     .catch(e => {
+//       log.error('error getting user list', e)
+//     })
+// })
 module.exports = router
