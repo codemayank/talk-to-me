@@ -13,6 +13,7 @@ import UserDashboardComponent from './pages/userdashboard/userdashboard'
 import UserService from './services/user.service'
 import FriendService from './services/friend.service'
 import userDashboardComponent from './pages/userdashboard/userdashboard'
+import chatUiComponent from './pages/chatui/chatui'
 
 angular
   .module('app', [
@@ -20,9 +21,11 @@ angular
     angularMoment,
     HomeComponent.name,
     ForgotPasswordComponent.name,
-    userDashboardComponent.name
+    userDashboardComponent.name,
+    chatUiComponent.name
   ])
   .factory('UserService', ['$http', '$q', UserService])
   .factory('FriendService', ['$http', '$q', FriendService])
+
   .config(routes)
   .run(routeAuthCheck)

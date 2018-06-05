@@ -10,7 +10,6 @@ passport.serializeUser((user, done) => {
 })
 
 passport.deserializeUser((id, done) => {
-  console.log(id)
   User.findById(id).then(user => {
     done(null, user)
   })
@@ -25,7 +24,7 @@ passport.use(
     },
     (accessToken, refreshToken, profile, done) => {
       //passport callback function
-      console.log(profile)
+
       //check if use already exists in our database.
       User.findOne({ google_id: profile.id }).then(currentUser => {
         if (currentUser) {

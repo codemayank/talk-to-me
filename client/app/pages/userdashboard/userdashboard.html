@@ -31,8 +31,14 @@
                 <ul>
                     Friends List
                     <li ng-repeat="friend in vm.myFriends">
-                        <span ng-if="friend.friend1._id !== vm.user._id">{{friend.friend1.username}}</span>
-                        <span ng-if="friend.friend2._id !== vm.user._id">{{friend.friend2.username}}</span>
+                        <span ng-if="friend.friend1._id !== vm.user._id">{{friend.friend1.username}}
+                            <a href="/#!/chat/{{friend.friend1._id}}/{{friend.friend1.username}}">Chat</a>
+                        </span>
+
+                        <span ng-if="friend.friend2._id !== vm.user._id">{{friend.friend2.username}}
+                            <a href="/#!/chat/{{friend.friend2._id}}/{{friend.friend2.username}}">Chat</a>
+                        </span>
+
                     </li>
                 </ul>
             </div>

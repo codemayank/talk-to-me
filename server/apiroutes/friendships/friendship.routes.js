@@ -93,7 +93,6 @@ notificationEvents.on('fRSent', data => {
     friendShip: data.friendShip
   })
   newNotification.save().then(notification => {
-    console.log(notification)
     return User.findByIdAndUpdate(data.friendShip.friend2, {
       $push: { notifications: notification._id }
     }).catch(e => {

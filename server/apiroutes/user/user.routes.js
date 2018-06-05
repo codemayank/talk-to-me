@@ -25,7 +25,6 @@ router.get(
   '/auth/google/redirect',
   passport.authenticate('google'),
   (req, res) => {
-    console.log(req.user)
     res.redirect('/user/welcome')
   }
 )
@@ -58,20 +57,16 @@ router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) {
       if (err === 'Loginerr2') {
-        console.log('returning error from 401 block', err)
         return res.status(401).send({ err })
       } else {
-        console.log('returning error from 500 block', err)
         return res.status(500).send({ err })
       }
     }
     if (!user) {
-      console.log(info)
       return res.status(401).send({ info })
     }
     req.login(user, err => {
       if (err) {
-        console.log('returning error from 500 block', err)
         return res.status(500).send({ err })
       }
       //redirect use to #!/testdashboard
@@ -99,14 +94,11 @@ router.get('/reset-password/:token', (req, res) => {
   res.redirect('/#!/reset-password/' + req.params.token)
 })
 router.post('/reset-password/:token', (req, res) => {
-  console.log(req.body)
-
   User.changePassword(req.params.token, req.body.newPassword)
     .then(() => {
       res.send('password changed successfully')
     })
     .catch(e => {
-      console.log('error in changing the password', e)
       res.status(400).send()
     })
 })
@@ -146,7 +138,6 @@ router.get('/details', authenticate, (req, res) => {
                   usersList.findIndex(x => x._id === user._id),
                   1
                 )
-                console.log('logging users list', usersList)
               }
             })
           })

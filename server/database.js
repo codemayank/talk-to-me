@@ -1,3 +1,0 @@
-/**
- * Mongodb Module
- */

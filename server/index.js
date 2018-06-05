@@ -15,6 +15,7 @@ mongoose.connect(process.env.DATABASE_URL)
 
 //setup express app
 const app = express()
+const http = require('http').createServer(app)
 const port = process.env.PORT || 5000
 
 //configure body-parser
@@ -59,6 +60,10 @@ app.use('/user', userRoutes)
 app.use('/friendship', friendShipRoutes)
 
 //start the app
-app.listen(port, () => {
+http.listen(port, () => {
   log.info(`Server listening at port ${port}`)
 })
+
+const chatSockets = require('./sockets/chat.sockets')
+chatSockets.controller(http)
+module.exports = { app }

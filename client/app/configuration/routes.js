@@ -13,6 +13,12 @@ function routes($routeProvider, $locationProvider) {
         restricted: true
       }
     })
+    .when('/chat/:id/:username', {
+      template: '<chat-ui></chat-ui>',
+      access: {
+        restricted: true
+      }
+    })
 
     .when('/reset-password/:token', {
       template: '<forgot-password></forgot-password>',
