@@ -3,6 +3,8 @@ import ngRoute from 'angular-route'
 import '../../node_modules/material-design-lite/material.min.css'
 import '../../node_modules/material-design-lite/material'
 import '../main.css'
+import moment from 'moment'
+import angularMoment from 'angular-moment'
 import routes from './configuration/routes'
 import routeAuthCheck from './configuration/routeauthcheck'
 import HomeComponent from './pages/home/home'
@@ -15,6 +17,7 @@ import userDashboardComponent from './pages/userdashboard/userdashboard'
 angular
   .module('app', [
     ngRoute,
+    angularMoment,
     HomeComponent.name,
     ForgotPasswordComponent.name,
     userDashboardComponent.name

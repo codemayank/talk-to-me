@@ -1,9 +1,10 @@
 class UserDashboardController {
-  constructor(UserService, FriendService, $location) {
+  constructor(UserService, FriendService, $location, moment) {
     'ngInject'
     this.userService = UserService
     this.friendService = FriendService
     this.location = $location
+    this.moment = moment
   }
 
   onLogout() {

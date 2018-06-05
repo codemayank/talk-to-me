@@ -85,8 +85,9 @@
                 <div class="main-content">
                     <h6>Notifications</h6>
                     <ul>
-                        <li ng-repeat="notification in vm.user.notifications">
-                            {{notification.message}}{{notification.createdAt}}
+                        <li ng-repeat="notification in vm.user.notifications | orderBy : '-createdAt'">
+                            {{notification.message}}
+                            <span>{{notification.createdAt |amCalendar:referenceTime:formats}}</span>
                         </li>
 
                     </ul>
