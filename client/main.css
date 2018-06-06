@@ -12,6 +12,10 @@ body {
   padding-top: 20px;
 }
 
+.friends-list {
+  width: 300px;
+}
+
 a {
   cursor: pointer;
 }

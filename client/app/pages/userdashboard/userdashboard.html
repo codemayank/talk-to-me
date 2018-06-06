@@ -10,75 +10,164 @@
         </div>
         <!-- Tabs -->
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
-            <a href="#scroll-tab-1" class="mdl-layout__tab is-active">Friends</a>
-            <a href="#scroll-tab-2" class="mdl-layout__tab">People</a>
-            <a href="#scroll-tab-3" class="mdl-layout__tab">Friend Requests</a>
-            <a href="#scroll-tab-4" class="mdl-layout__tab">Notifications</a>
+            <a href="#scroll-tab-1" class="mdl-layout__tab is-active">
+                <span>
+                    <i class="material-icons">
+                        people
+                    </i>
+                </span>
+            </a>
+            <a href="#scroll-tab-2" class="mdl-layout__tab">
+                <i class="material-icons">
+                    people_outline
+                </i>
+            </a>
+            <a href="#scroll-tab-3" class="mdl-layout__tab">
+                <i class="material-icons">
+                    group_add
+                </i>
+            </a>
+            <a href="#scroll-tab-4" class="mdl-layout__tab">
+                <i class="material-icons">
+                    notifications
+                </i>
+            </a>
 
         </div>
     </header>
     <div class="mdl-layout__drawer">
-        <span class="mdl-layout-title">{{vm.user.username}}</span>
-
-        <a ng-click="vm.onLogout()" class="mdl-navigation__link">Logout</a>
-
-
+        <span class="mdl-layout-title">
+            {{vm.user.username}}
+        </span>
+        <nav class="mdl-navigation">
+            <a ng-click="vm.onLogout()" class="mdl-navigation__link">Logout</a>
+        </nav>
     </div>
-    <main class="mdl-layout__content">
+    <main class="mdl-layout__content" style="flex: 1 0 auto;">
         <section class="mdl-layout__tab-panel is-active" id="scroll-tab-1">
             <div class="page-content">
                 <!-- Your content goes here -->
-                <ul>
-                    Friends List
-                    <li ng-repeat="friend in vm.myFriends">
-                        <span ng-if="friend.friend1._id !== vm.user._id">{{friend.friend1.username}}
-                            <a href="/#!/chat/{{friend.friend1._id}}/{{friend.friend1.username}}">Chat</a>
-                        </span>
+                <div class="mdl-grid">
 
-                        <span ng-if="friend.friend2._id !== vm.user._id">{{friend.friend2.username}}
-                            <a href="/#!/chat/{{friend.friend2._id}}/{{friend.friend2.username}}">Chat</a>
-                        </span>
+                    <div class="md-cell mdl-cell--6-col mdl-cell--3-offset-desktop">
 
-                    </li>
-                </ul>
+                        <h6>Your Friends</h6>
+
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input class="mdl-textfield__input" type="text" ng-model="searchFriend" id="friendListSearch">
+                            <label class="mdl-textfield__label" for="friendListSearch">Search in friend list</label>
+                        </div>
+
+
+                        <ul class="friends-list mdl-list">
+
+                            <li class="mdl-list__item" ng-repeat="friend in vm.myFriends | filter:searchFriend">
+                                <span ng-if="friend.friend1._id !== vm.user._id">
+                                    <a class="mdl-list__item-primary-content" href="/#!/chat/{{friend.friend1._id}}/{{friend.friend1.username}}">
+                                        <i class="material-icons mdl-list__item-avatar">person</i>
+                                        {{friend.friend1.username}}
+
+                                    </a>
+                                </span>
+                                <span ng-if="friend.friend2._id !== vm.user._id">
+                                    <a class="mdl-list__item-primary-content" href="/#!/chat/{{friend.friend2._id}}/{{friend.friend2.username}}">
+                                        <i class="material-icons mdl-list__item-avatar">person</i>
+                                        {{friend.friend2.username}}
+
+                                    </a>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
             </div>
         </section>
         <section class="mdl-layout__tab-panel" id="scroll-tab-2">
             <div class="page-content">
                 <!-- Your content goes here -->
-                <h6>Users List</h6>
-                <ul>
-                    <li ng-repeat="user in vm.users">
-                        {{user.username}}
-                        <a ng-click="vm.onSendFriendRequest(user._id)">Friend Request</a>
-                    </li>
-                </ul>
+                <div class="mdl-grid">
+                    <div class="md-cell mdl-cell--6-col mdl-cell--3-offset-desktop">
+                        <h6>Users List</h6>
+
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input class="mdl-textfield__input" type="text" ng-model="searchUser" id="userListSearch">
+                            <label class="mdl-textfield__label" for="userListSearch">Search in user list</label>
+                        </div>
+                        <ul class="friends-list mdl-list">
+                            <li class="mdl-list__item" ng-repeat="user in vm.users | filter:searchUser">
+                                <span class="mdl-list__item-primary-content">
+                                    <i class="material-icons mdl-list__item-avatar">person</i>
+                                    <span>{{user.username}}</span>
+                                </span>
+                                <span class="mdl-list__item-secondary-content">
+                                    <a class="mdl-list__item-secondary-action" ng-click="vm.onSendFriendRequest(user._id)">
+                                        <i class="material-icons">person_add</i>
+                                    </a>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </section>
         <section class="mdl-layout__tab-panel" id="scroll-tab-3">
             <div class="page-content">
                 <!-- Your content goes here -->
                 <div class="main-content">
-                    <h6>Pending Friend Requests</h6>
-                    <div class="mdl-grid">
-                        <div class="mdl-cell mdl-cell--6-col">
-                            <h6>Requests that you sent</h6>
-                            <ul>
-                                <li ng-repeat="friendRequest in vm.fromFriendRequestPending">
-                                    {{friendRequest.friend2.username}}
-                                    <a ng-click="vm.onCancelFriendRequest(friendRequest._id, 1)">Cancel Request</a>
-                                </li>
-                            </ul>
+                    <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+                        <div class="mdl-tabs__tab-bar">
+                            <a href="#friendRequestsReceived" class="mdl-tabs__tab is-active">Requests to me</a>
+                            <a href="#friendRequestsSent" class="mdl-tabs__tab">My Requests</a>
                         </div>
-                        <div class="mdl-cell mdl-cell--6-col">
-                            <h6>Requests that you received</h6>
-                            <ul>
-                                <li ng-repeat="friendRequest in vm.toFriendRequestPending">
-                                    {{friendRequest.friend1.username}}
-                                    <a ng-click="vm.onAcceptFriendRequest(friendRequest._id)">Accept Request</a>
-                                    <a ng-click="vm.onCancelFriendRequest(friendRequest._id, 2)">Decline Request</a>
-                                </li>
-                            </ul>
+                        <div class="mdl-tabs__panel" id="friendRequestsSent">
+                            <div class="mdl-grid">
+                                <div class="mdl-cell mdl-cell--6-col mdl-cell--3-offset-desktop">
+                                    <h6>Requests that you've sent</h6>
+                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                        <input class="mdl-textfield__input" ng-model="friendRequest1" type="text" id="friendRequest1">
+                                        <label class="mdl-textfield__label" for="friendRequest1">Search Friend Request List</label>
+                                    </div>
+                                    <ul class="friends-list mdl-list">
+                                        <li class="mdl-list__item" ng-repeat="friendRequest in vm.fromFriendRequestPending | filter : friendRequest1">
+                                            <span class="mdl-list__item-primary-content">
+                                                <i class="material-icons mdl-list__item-avatar">person</i> {{friendRequest.friend2.username}}</span>
+                                            <span class="mdl-list__item-secondary-content">
+                                                <a ng-click="vm.onCancelFriendRequest(friendRequest._id, 1)">
+                                                    <i class="material-icons">cancel</i>
+                                                </a>
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mdl-tabs__panel is-active" id="friendRequestsReceived">
+                            <div class="mdl-grid">
+                                <div class="mdl-cell mdl-cell--6-col mdl-cell--3-offset-desktop">
+                                    <h6>Requests that you've received</h6>
+                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                        <input class="mdl-textfield__input" ng-model="friendRequest2" type="text" id="friendRequest2">
+                                        <label class="mdl-textfield__label" for="friendRequest2">Search Friend Request List</label>
+                                    </div>
+                                    <ul class="friends-list mdl-list">
+                                        <li class="mdl-list__item" ng-repeat="friendRequest in vm.toFriendRequestPending | filter:friendRequest2">
+                                            <span class="mdl-list__item-primary-content">
+                                                <i class="material-icons mdl-list__item-avatar">person</i>{{friendRequest.friend1.username}}</span>
+                                            <span class="mdl-list__item-secondary-content">
+                                                <a ng-click="vm.onAcceptFriendRequest(friendRequest._id)">
+                                                    <i class="material-icons">check</i>
+                                                </a>
+                                            </span>
+                                            <span class="mdl-list__item-secondary-content">
+                                                <a ng-click="vm.onCancelFriendRequest(friendRequest._id, 2)">
+                                                    <i class="material-icons">cancel</i>
+                                                </a>
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -88,19 +177,30 @@
         <section class="mdl-layout__tab-panel" id="scroll-tab-4">
             <div class="page-content">
                 <!-- Your content goes here -->
-                <div class="main-content">
-                    <h6>Notifications</h6>
-                    <ul>
-                        <li ng-repeat="notification in vm.user.notifications | orderBy : '-createdAt'">
-                            {{notification.message}}
-                            <span>{{notification.createdAt |amCalendar:referenceTime:formats}}</span>
-                        </li>
-
-                    </ul>
+                <div class="mdl-grid">
+                    <div class="mdl-cell mdl-cell--6-col mdl-cell--3-offset-desktop">
+                        <ul class="mdl-list">
+                            <li class="mdl-list__item">
+                                <span class="mdl-list__item-primary-content">Notifications</span>
+                            </li>
+                            <li class="mdl-list__item mdl-list__item--two-line" ng-repeat="notification in vm.user.notifications | orderBy : '-createdAt'">
+                                <span class="mdl-list__item-primary-content">
+                                    <span>{{notification.message}}</span>
+                                    <span class="mdl-list__item-sub-title">{{notification.createdAt |amCalendar:referenceTime:formats}}</span>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-
-
         </section>
     </main>
+    <footer class="mdl-mini-footer" style="flex: 0 0 auto;">
+        <div class="mdl-mini-footer__left-section">
+            <div class="mdl-logo">
+
+                ~created By~ Mayank Yadav 2018
+            </div>
+        </div>
+    </footer>
 </div>

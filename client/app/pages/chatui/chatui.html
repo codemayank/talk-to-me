@@ -1,12 +1,40 @@
-<h6>This is the chat ui</h6>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+            <!-- Title -->
+            <span class="mdl-layout-title">{{vm.friendName}} &nbsp;&nbsp;
+                <span ng-if="vm.friendTyping">typing...</span>
+            </span>
+            <!-- Add spacer, to align navigation to the right -->
+            <div class="mdl-layout-spacer"></div>
+            <!-- Navigation. We hide it in small screens. -->
+            <nav class="mdl-navigation mdl-layout--large-screen-only">
+                <a class="mdl-navigation__link" href="/#!/user/dashboard">Back</a>
+            </nav>
+        </div>
+    </header>
+    <!-- <div class="mdl-layout__drawer">
+        <span class="mdl-layout-title">Title</span>
+        <nav class="mdl-navigation">
+            <a class="mdl-navigation__link" href="">Link</a>
+        </nav>
+    </div> -->
+    <main class="mdl-layout__content">
+        <div class="page-content">
+            <!-- Your content goes here -->
+            <h6>This is the chat ui</h6>
 
-<ul>
-    <li ng-repeat="message in vm.conversation.messages">{{message.text}}
-        <span>{{message.createdAt |amCalendar:referenceTime:formats }}</span>
-    </li>
-</ul>
+            <ul>
+                <li ng-repeat="message in vm.conversation.messages">{{message.text}}
+                    <span>{{message.createdAt |amCalendar:referenceTime:formats }}</span>
+                </li>
+            </ul>
 
-<form ng-submit='vm.onNewMessage()'>
-    <input type="text" ng-model="vm.newMessage" required>
-    <button type="submit">Send</button>
-</form>
+            <form ng-submit='vm.onNewMessage()'>
+                <input type="text" ng-change="vm.onKeyDown()" ng-model="vm.newMessage" placeholder="Message" autofocus autocomplete="off"
+                    required>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </main>
+</div>

@@ -55,7 +55,8 @@ module.exports.controller = server => {
             message: message,
             user: user,
             status: 'success',
-            conversation: data.conversation
+            conversation: data.conversation,
+            friendIndex: friendIndex
           })
           currentConversation = data.conversation._id
         } else if (data.status === 'failure') {
@@ -74,23 +75,56 @@ module.exports.controller = server => {
         data.message.to,
         data.message.text
       )
-      let friendIndex = connectedUsers.findIndex(x => x._id === data.sendTo)
-      if (friendIndex > -1) {
-        io.to(connectedUsers[friendIndex].socket).emit(
+      if (data.friendIndex === -1) {
+        let friendIndex = connectedUsers.findIndex(x => x._id === data.sendTo)
+        if (friendIndex > -1) {
+          io.to(connectedUsers[friendIndex].socket).emit(
+            'receiveIncomingMessage',
+            { message: message, friendIndex: friendIndex }
+          )
+        }
+      } else {
+        io.to(connectedUsers[data.friendIndex].socket).emit(
           'receiveIncomingMessage',
-          { message }
+          { message: message, friendIndex: friendIndex }
         )
       }
       callback({ message })
       messageStoreEvents.emit('storeMessage', { message })
     })
+    socket.on('startedTyping', data => {
+      if (data.friendIndex > -1) {
+        io.to(connectedUsers[friendIndex].socket).emit('friendTyping')
+      }
+    })
 
-    socket.on('disconnect', () => {
-      console.log('the user has disconnected the socket')
+    socket.on('stoppedTyping', data => {
+      if (data.friendIndex > -1) {
+        io.to(connectedUsers[friendIndex].socket).emit('friendStoppedTyping')
+      }
+    })
+    socket.on('disconnecting', data => {
+      if (data.friendIndex > -1) {
+        let message = generateMessage(
+          'Server',
+          'User',
+          user.username + ' has disconnected.'
+        )
+        io.to(connectedUsers[data.friendIndex].socket).emit(
+          'friendDisconnected',
+          {
+            message
+          }
+        )
+      }
       let userIndex = connectedUsers.findIndex(x => x._id === user._id)
       connectedUsers.splice(userIndex, 1)
     })
+    socket.on('disconnect', () => {
+      console.log('the socket has disconnected')
+    })
   })
+
   //event handler to store messages in conversation
   messageStoreEvents.on('storeMessage', data => {
     Conversation.findByIdAndUpdate(

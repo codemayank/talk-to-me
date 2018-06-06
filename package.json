@@ -6,7 +6,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": "webpack --env development ./client/app/index.js --watch",
-    "build": "webpack --env production ./client/app/index.js"
+    "build": "webpack --env production ./client/app/index.js",
+    "build:stats": "webpack --env production ./client/app/index.js --json > stats.json"
   },
   "engines": {
     "node": "8.11.2"
