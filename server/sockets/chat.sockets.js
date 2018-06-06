@@ -27,29 +27,22 @@ module.exports.controller = server => {
 
   io.on('connection', socket => {
     let user = socket.request.session.passport.user //get user data from session object
-    let friendIndex = undefined
+
     let userObj = {
-      _id: user._id,
-      friendSocket: 'offline'
+      _id: user._id
     }
     socket.on('userConnected', data => {
       userObj.socket = socket.id
+      let friendIndex = connectedUsers.findIndex(x => x._id === data.friend._id)
 
-      console.log(connectedUsers)
-      friendIndex = connectedUsers.findIndex(x => x._id === data.friend._id)
       let textStr = ''
+      connectedUsers.push(userObj)
       if (friendIndex === -1) {
-        let textStr =
+        textStr =
           data.friend.username +
           ' is currently offline but you can still send them messages they will be abe to read your messages once they are online'
-        connectedUsers.push(userObj)
       } else {
-        console.log(data.friend._id, friendIndex)
-        userObj.friendSocket = connectedUsers[friendIndex].socket
-        connectedUsers[friendIndex].socket = userObj.socket
-        connectedUsers.push(userObj)
-
-        let textStr = data.friend.username + ' is online say hi!'
+        textStr = data.friend.username + ' is online say hi!'
       }
       messageStoreEvents.emit('sendConversation', {
         user: user._id,
@@ -81,10 +74,12 @@ module.exports.controller = server => {
         data.message.to,
         data.message.text
       )
-
-      if (userObj.friendSocket !== 'offline') {
-        console.log(friendSocket)
-        io.to(userObj.friendSocket).emit('receiveIncomingMessage', { message })
+      let friendIndex = connectedUsers.findIndex(x => x._id === data.sendTo)
+      if (friendIndex > -1) {
+        io.to(connectedUsers[friendIndex].socket).emit(
+          'receiveIncomingMessage',
+          { message }
+        )
       }
       callback({ message })
       messageStoreEvents.emit('storeMessage', { message })

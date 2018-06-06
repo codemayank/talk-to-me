@@ -55,12 +55,17 @@ class ChatUiController {
       to: this.routeParams.username,
       text: this.newMessage
     }
+    let sendToId = this.routeParams.id
 
-    this.socket.emit('newMessage', { message }, message => {
-      this.conversation.messages.push(message.message)
-      this.newMessage = ''
-      this.scope.$apply()
-    })
+    this.socket.emit(
+      'newMessage',
+      { message: message, sendTo: sendToId },
+      message => {
+        this.conversation.messages.push(message.message)
+        this.newMessage = ''
+        this.scope.$apply()
+      }
+    )
   }
 }
 
