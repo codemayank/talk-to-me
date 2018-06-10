@@ -2,8 +2,8 @@
     <header class="mdl-layout__header">
         <div class="mdl-layout__header-row">
             <!-- Title -->
-            <span class="mdl-layout-title">{{vm.friendName}} &nbsp;&nbsp;
-                <span ng-if="vm.friendTyping">typing...</span>
+            <span class="mdl-layout-title">{{vm.currentFriend.username}} &nbsp;&nbsp;
+                <span ng-if="vm.currentFriend.friendId === vm.friendTyping">typing...</span>
             </span>
             <!-- Add spacer, to align navigation to the right -->
             <div class="mdl-layout-spacer"></div>
@@ -13,26 +13,33 @@
             </nav>
         </div>
     </header>
-    <!-- <div class="mdl-layout__drawer">
+    <div class="mdl-layout__drawer">
         <span class="mdl-layout-title">Title</span>
         <nav class="mdl-navigation">
-            <a class="mdl-navigation__link" href="">Link</a>
+            <a class="mdl-navigation__link" ng-repeat="friend in vm.friends track by $index" ng-click="vm.selectFriend(friend.friendId)">{{friend.username}}&nbsp;{{friend.status}}</a>
         </nav>
-    </div> -->
+    </div>
     <main class="mdl-layout__content">
         <div class="page-content">
             <!-- Your content goes here -->
             <h6>This is the chat ui</h6>
 
-            <ul>
-                <li ng-repeat="message in vm.conversation.messages">{{message.text}}
-                    <span>{{message.createdAt |amCalendar:referenceTime:formats }}</span>
-                </li>
-            </ul>
+            <div class="mdl-grid">
+                <div class="mdl-cell mdl-cell--8-col mdl-cell--3-offset-desktop">
 
-            <form ng-submit='vm.onNewMessage()'>
+                    <div class="chat" ng-repeat="message in vm.currentConversation.messages" ng-class="vm.alignMessage(message)">
+                        <div class="chat-message" ng-class="vm.messageOwner(message)">
+                            <span class="message-text">{{message.text}}</span>
+                            <div class="chat-message-time">
+                                <span class="message-time">{{message.createdAt |amCalendar:referenceTime:formats }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <form ng-submit='vm.sendMessage()'>
                 <input type="text" ng-change="vm.onKeyDown()" ng-model="vm.newMessage" placeholder="Message" autofocus autocomplete="off"
-                    required>
+                    required ng-disabled="vm.disableInput">
                 <button type="submit">Send</button>
             </form>
         </div>

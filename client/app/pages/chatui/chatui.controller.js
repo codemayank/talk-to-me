@@ -10,95 +10,141 @@ class ChatUiController {
     this.typing = false
     this.timeOutVar = undefined
     this.friendTyping = false
+    this.conversations = []
+    this.currentFriend
+    this.currentConversation
+    this.disableInput = true
   }
 
   $onDestroy() {
-    this.socket.emit('disconnecting', { friendIndex: this.friendIndex })
     this.socket.disconnect()
     console.log('the socket was disconnected')
   }
 
   $onInit() {
-    this.friendName = this.routeParams.username
-    this.socketEventListen()
-  }
-
-  socketEventListen() {
-    let friend = {
-      _id: this.routeParams.id,
-      username: this.routeParams.username
-    }
-
     this.socket = io.connect()
-    this.socket.emit('userConnected', { friend })
-
-    this.socket.on('friendStatus', data => {
-      if (data.status === 'success') {
-        console.log(data)
-        this.conversation = data.conversation
-        this.friendIndex = data.friendIndex
-
-        this.notification = data.message
-        this.user = data.user
-        this.timeout(() => {
-          this.notification = false
-        }, 5000)
-        this.scope.$apply()
-      } else if (data.status === 'failure') {
-        this.location.path('/user/dashboard')
+    this.socket.on('userConnected', data => {
+      console.log(data)
+      this.friends = data.myFriendsStatus
+      console.log(this.friends)
+      this.conversations = data.myConversations
+      this.user = data.user
+      this.socketEventListen()
+      this.scope.$apply()
+    })
+  }
+  selectFriend(friendId) {
+    let index = this.conversations.findIndex(x => {
+      if (x.userone === friendId || x.usertwo === friendId) {
+        return x
       }
     })
-    this.socket.on('receiveIncomingMessage', data => {
-      this.conversation.messages.push(data.message)
-      this.scope.$apply()
-    })
-    this.socket.on('friendDisconnected', data => {
-      this.friendIndex = -1
-      this.scope.$apply()
-    })
-    this.socket.on('friendTyping', () => {
-      this.friendTyping = true
-      this.scope.$apply()
-    })
-    this.socket.on('friendStoppedTyping', () => {
-      this.friendTyping = false
-      this.scope.$apply()
-    })
-  }
-  timeOutCallback() {
-    this.typing = false
-    this.socket.emit('stoppedTyping')
+    let friendIndex = this.friends.findIndex(x => x.friendId === friendId)
+    this.currentConversation = this.conversations[index]
+    this.currentFriend = this.friends[friendIndex]
+    console.log(
+      'logging this.conversation & this.friend',
+      this.conversation,
+      this.currentFriend
+    )
+    this.disableInput = false
   }
 
-  onKeyDown() {
-    if (this.typing === false) {
-      typing = true
-      this.socket.emit('startedTyping', { friendIndex: this.friendIndex })
-      this.timeOutVar = setTimeout(timeOutCallback, 500)
-    } else {
-      clearTimeout(this.timeOutVar)
-      this.timeOutVar = setTimeout(timeOutCallback, 500)
-    }
-  }
-
-  onNewMessage() {
-    console.log('on new message was fired')
+  sendMessage(messageText) {
     let message = {
       from: this.user.username,
-      to: this.routeParams.username,
+      to: this.currentFriend.username,
       text: this.newMessage
     }
-    let sendToId = this.routeParams.id
-
     this.socket.emit(
       'newMessage',
-      { message: message, friendIndex: this.friendIndex },
-      message => {
-        this.conversation.messages.push(message.message)
+      {
+        message: message,
+        conversation: this.currentConversation._id,
+        friendId: this.currentFriend.friendId
+      },
+      data => {
+        console.log(data)
+        this.currentConversation.messages.push(data.message)
         this.newMessage = ''
         this.scope.$apply()
       }
     )
+  }
+  socketEventListen() {
+    this.socket.on('sendMessage', data => {
+      let index = this.conversations.findIndex(x => x._id === data.conversation)
+      if (index > -1) {
+        this.conversations[index].messages.push(data.message)
+      }
+      this.scope.$apply()
+    })
+    this.socket.on('friendJoined', data => {
+      console.log('friend joined', data)
+      let index = this.friends.findIndex(x => x.friendId === data.friendId)
+      if (index > -1) {
+        this.friends[index].status = 'online'
+      }
+      this.scope.$apply()
+    })
+    this.socket.on('friendDisconnected', data => {
+      console.log('friend disconnedted', data)
+      let index = this.friends.findIndex(x => x.friendId === data.friendId)
+      if (index > -1) {
+        this.friends[index].status = 'offline'
+      }
+      this.scope.$apply()
+    })
+    this.socket.on('friendTyping', data => {
+      console.log('a friend is typing')
+      console.log(data)
+      this.friendTyping = data.friendId
+      this.scope.$apply()
+    })
+    this.socket.on('friendStoppedTyping', data => {
+      console.log('a friend has stopped typing')
+      this.friendTyping = ''
+      this.scope.$apply()
+    })
+  }
+
+  onKeyDown() {
+    console.log('logging on key down')
+    if (this.typing === false) {
+      this.typing = true
+      this.socket.emit('startedTyping', {
+        friendId: this.currentFriend.friendId
+      })
+      this.timeOutVar = setTimeout(() => {
+        this.typing = false
+        this.socket.emit('stoppedTyping', {
+          friendId: this.currentFriend.friendId
+        })
+      }, 500)
+    } else {
+      clearTimeout(this.timeOutVar)
+      this.timeOutVar = setTimeout(() => {
+        this.typing = false
+        this.socket.emit('stoppedTyping', {
+          friendId: this.currentFriend.friendId
+        })
+      }, 500)
+    }
+  }
+
+  alignMessage(message) {
+    if (message.from !== this.user.username) {
+      return 'message-main-receiver'
+    } else {
+      return 'message-main-sender'
+    }
+  }
+  messageOwner(message) {
+    if (message.from !== this.user.username) {
+      return 'chat-message-to-me'
+    } else {
+      return 'chat-message-from-me'
+    }
   }
 }
 

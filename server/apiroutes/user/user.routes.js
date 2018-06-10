@@ -65,7 +65,7 @@ router.post('/login', (req, res, next) => {
     if (!user) {
       return res.status(401).send({ info })
     }
-    req.login(user, err => {
+    req.logIn(user, err => {
       if (err) {
         return res.status(500).send({ err })
       }

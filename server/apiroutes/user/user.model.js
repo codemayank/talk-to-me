@@ -26,7 +26,7 @@ let userSchema = new mongoose.Schema({
   google_id: {
     type: String
   },
-
+  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'FriendShip' }],
   notifications: [
     {
       type: mongoose.Schema.Types.ObjectId,
