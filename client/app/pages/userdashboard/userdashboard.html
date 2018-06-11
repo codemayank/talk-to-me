@@ -1,85 +1,50 @@
 <!-- Simple header with fixed tabs. -->
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <header class="mdl-layout__header">
-        <div class="mdl-layout__header-row">
+        <div class="mdl-layout__header-row chat-layout-header">
             <!-- Title -->
             <span class="mdl-layout-title">{{vm.user.username}}</span>
             <div class="mdl-layout-spacer"></div>
             <a ng-click="vm.onLogout()" class="mdl-navigation__link">Logout</a>
-
         </div>
         <!-- Tabs -->
-        <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
-            <a href="#scroll-tab-1" class="mdl-layout__tab is-active">
+        <div class="mdl-layout__tab-bar chat-layout-header mdl-js-ripple-effect">
+            <a href="#scroll-tab-1" class="mdl-layout__tab is-active" ng-click="vm.showChat = true">
                 <span>
                     <i class="material-icons">
                         people
                     </i>
+                    <span class="icon-text">My Friends</span>
                 </span>
             </a>
-            <a href="#scroll-tab-2" class="mdl-layout__tab">
+            <a href="#scroll-tab-2" class="mdl-layout__tab" ng-click="vm.showChat = false">
                 <i class="material-icons">
                     people_outline
                 </i>
+                <span class="icon-text">People</span>
             </a>
-            <a href="#scroll-tab-3" class="mdl-layout__tab">
+            <a href="#scroll-tab-3" class="mdl-layout__tab" ng-click="vm.showChat = false">
                 <i class="material-icons">
                     group_add
                 </i>
+                <span class="icon-text">Friend Requests</span>
             </a>
-            <a href="#scroll-tab-4" class="mdl-layout__tab">
-                <i class="material-icons">
-                    notifications
-                </i>
+            <a href="#scroll-tab-4" class="mdl-layout__tab" ng-click="vm.showChat = false">
+                <span>
+                    <i class="material-icons">
+                        notifications
+                    </i>
+                </span>
+                <span class="icon-text">Notifications</span>
             </a>
-
         </div>
     </header>
-    <div class="mdl-layout__drawer">
-        <span class="mdl-layout-title">
-            {{vm.user.username}}
-        </span>
-        <nav class="mdl-navigation">
-            <a ng-click="vm.onLogout()" class="mdl-navigation__link">Logout</a>
-        </nav>
-    </div>
     <main class="mdl-layout__content" style="flex: 1 0 auto;">
         <section class="mdl-layout__tab-panel is-active" id="scroll-tab-1">
             <div class="page-content">
-                <!-- Your content goes here -->
-                <div class="mdl-grid">
 
-                    <div class="md-cell mdl-cell--6-col mdl-cell--3-offset-desktop">
-
-                        <h6>Your Friends</h6>
-
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <input class="mdl-textfield__input" type="text" ng-model="searchFriend" id="friendListSearch">
-                            <label class="mdl-textfield__label" for="friendListSearch">Search in friend list</label>
-                        </div>
-
-
-                        <ul class="friends-list mdl-list">
-
-                            <li class="mdl-list__item" ng-repeat="friend in vm.myFriends | filter:searchFriend">
-                                <span ng-if="friend.friend1._id !== vm.user._id">
-                                    <a class="mdl-list__item-primary-content" href="/#!/chat/{{friend.friend1._id}}/{{friend.friend1.username}}">
-                                        <i class="material-icons mdl-list__item-avatar">person</i>
-                                        {{friend.friend1.username}}
-
-                                    </a>
-                                </span>
-                                <span ng-if="friend.friend2._id !== vm.user._id">
-                                    <a class="mdl-list__item-primary-content" href="/#!/chat/{{friend.friend2._id}}/{{friend.friend2.username}}">
-                                        <i class="material-icons mdl-list__item-avatar">person</i>
-                                        {{friend.friend2.username}}
-
-                                    </a>
-                                </span>
-                            </li>
-                        </ul>
-                    </div>
-
+                <div ng-if="vm.showChat">
+                    <chat-ui></chat-ui>
                 </div>
             </div>
         </section>
@@ -195,12 +160,5 @@
             </div>
         </section>
     </main>
-    <footer class="mdl-mini-footer" style="flex: 0 0 auto;">
-        <div class="mdl-mini-footer__left-section">
-            <div class="mdl-logo">
 
-                ~created By~ Mayank Yadav 2018
-            </div>
-        </div>
-    </footer>
 </div>

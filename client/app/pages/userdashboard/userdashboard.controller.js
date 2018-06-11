@@ -4,7 +4,9 @@ class UserDashboardController {
     this.userService = UserService
     this.friendService = FriendService
     this.location = $location
+
     this.moment = moment
+    this.showChat = true
   }
 
   onLogout() {
@@ -30,14 +32,15 @@ class UserDashboardController {
       })
   }
   onAcceptFriendRequest(friendShipId) {
+    console.log('onAcceptFiendRequest fired', friendShipId)
     this.friendService
       .acceptFriendRequest(friendShipId)
       .then(data => {
+        console.log('logging data', data)
         this.toFriendRequestPending.splice(
           this.toFriendRequestPending.findIndex(x => x._id === friendShipId),
           1
         )
-        this.myFriends.push(data.friendShip)
       })
       .catch(e => {
         console.log('could not add friend', e)
@@ -75,6 +78,7 @@ class UserDashboardController {
         this.myFriends = data.friends
         this.fromFriendRequestPending = data.fromFriendRequestPending
         this.toFriendRequestPending = data.toFriendRequestPending
+        console.log(data)
       })
       .catch(e => {
         console.log('error fetching userlist', e)

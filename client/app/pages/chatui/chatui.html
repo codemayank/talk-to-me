@@ -1,33 +1,56 @@
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <header class="mdl-layout__header">
-        <div class="mdl-layout__header-row">
-            <!-- Title -->
-            <span class="mdl-layout-title">{{vm.currentFriend.username}} &nbsp;&nbsp;
-                <span ng-if="vm.currentFriend.friendId === vm.friendTyping">typing...</span>
+    <header class="mdl-layout__header" style="background: transparent; color: black">
+        <div class="mdl-layout__header-row chat-layout-header">
+            <span class="mdl-layout-title">
+                <span ng-if="!vm.chatView">Chat
+                    <div class="mdl-textfield mdl-js-textfield chat-search">
+                        <input class="mdl-textfield__input" type="text" ng-model="searchFriend" id="friendListSearch">
+                        <label class="mdl-textfield__label" for="friendListSearch">Search in user list</label>
+                    </div>
+                </span>
+                <span ng-if="vm.chatView">
+                    <button class="mdl-button mdl-js-button mdl-button--icon" ng-click="vm.setFriendListView()">
+                        <i class="material-icons">
+                            arrow_back_ios
+                        </i>
+                    </button>
+                    <span class="icon-text">{{vm.currentFriend.username}}&nbsp;
+                        <span ng-if="vm.notification">{{vm.notification}}</span>
+
+                    </span>
+                    <span class="icon-text" ng-if="vm.currentFriend.friendId === vm.friendTyping">typing...</span>
+                </span>
             </span>
-            <!-- Add spacer, to align navigation to the right -->
             <div class="mdl-layout-spacer"></div>
-            <!-- Navigation. We hide it in small screens. -->
-            <nav class="mdl-navigation mdl-layout--large-screen-only">
-                <a class="mdl-navigation__link" href="/#!/user/dashboard">Back</a>
-            </nav>
+
+
+            <span ng-if="vm.chatView">
+                <i class="material-icons" ng-class="vm.styleStatus(vm.currentFriend.status)">brightness_1</i>
+
+            </span>
         </div>
     </header>
-    <div class="mdl-layout__drawer">
-        <span class="mdl-layout-title">Title</span>
-        <nav class="mdl-navigation">
-            <a class="mdl-navigation__link" ng-repeat="friend in vm.friends track by $index" ng-click="vm.selectFriend(friend.friendId)">{{friend.username}}&nbsp;{{friend.status}}</a>
-        </nav>
-    </div>
-    <main class="mdl-layout__content">
+
+
+
+    <main class="mdl-layout__content" scroll-glue="vm.glued">
         <div class="page-content">
-            <!-- Your content goes here -->
-            <h6>This is the chat ui</h6>
 
-            <div class="mdl-grid">
-                <div class="mdl-cell mdl-cell--8-col mdl-cell--3-offset-desktop">
+            <ul class="friends-list mdl-list" ng-if="!vm.chatView">
+                <li class="mdl-list__item" class="mdl-navigation__link" ng-repeat="friend in vm.friends | filter:searchFriend">
+                    <a class="mdl-list__item-primary-content" ng-click="vm.selectFriend(friend.friendId)">
+                        <i class="material-icons mdl-list__item-avatar">person</i>
+                        {{friend.username}}&nbsp;
+                        <span ng-class="vm.styleStatus(friend.status)">
+                            <i class="material-icons">brightness_1</i>
+                        </span>
+                    </a>
+                </li>
+            </ul>
+            <div class="mdl-grid" ng-if="vm.chatView">
+                <div class="mdl-cell mdl-cell--9-col mdl-cell--1-offset-desktop" style="padding-bottom: 50px;">
 
-                    <div class="chat" ng-repeat="message in vm.currentConversation.messages" ng-class="vm.alignMessage(message)">
+                    <div class="chat" ng-repeat="message in vm.currentConversation.messages track by $index" id="{{$index}}" ng-class="vm.alignMessage(message)">
                         <div class="chat-message" ng-class="vm.messageOwner(message)">
                             <span class="message-text">{{message.text}}</span>
                             <div class="chat-message-time">
@@ -36,12 +59,23 @@
                         </div>
                     </div>
                 </div>
+
+                <div style="position: fixed; bottom: 0; right: 0; background: whitesmoke; width: 100%">
+                    <form ng-submit='vm.sendMessage()'>
+                        <div class="mdl-textfield mdl-js-textfield" style="width: 70%; margin-left: 10%">
+                            <input type="text" class="mdl-textfield__input" id="messageText" ng-change="vm.onKeyDown()" ng-model="vm.newMessage" placeholder="Message"
+                                autofocus autocomplete="off" required ng-disabled="vm.disableInput">
+                            <label class="mdl-textfield__label" for="messageText"></label>
+
+                        </div>
+                        <!-- Icon button -->
+                        <button type="submit" class="mdl-button mdl-js-button mdl-button--icon">
+                            <i class="material-icons">send</i>
+                        </button>
+
+                    </form>
+                </div>
             </div>
-            <form ng-submit='vm.sendMessage()'>
-                <input type="text" ng-change="vm.onKeyDown()" ng-model="vm.newMessage" placeholder="Message" autofocus autocomplete="off"
-                    required ng-disabled="vm.disableInput">
-                <button type="submit">Send</button>
-            </form>
         </div>
     </main>
 </div>

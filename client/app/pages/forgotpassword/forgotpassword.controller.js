@@ -1,13 +1,15 @@
 class ForgotPasswordController {
-  constructor(UserService, $routeParams, $location) {
+  constructor(UserService, $scope, $routeParams, $location) {
     'ngInject'
     this.userService = UserService
     this.routeParams = $routeParams
     this.location = $location
+    this.scope = $scope
+    this.emailSent = false
+    this.passwordResetSuccess = false
   }
 
   $onInit() {
-    console.log(this.routeParams)
     if (this.routeParams.token === 'noToken') {
       this.showForgotPasswordForm = true
     } else {
@@ -19,10 +21,14 @@ class ForgotPasswordController {
     this.userService
       .forgotPassword(this.forgotPasswordForm)
       .then(data => {
-        console.log(data)
+        this.emailSent = true
       })
       .catch(e => {
-        console.log('on email submit', e)
+        this.resetPasswordError = true
+        setTimeout(() => {
+          this.resetPasswordError = false
+          this.scope.$apply()
+        }, 10000)
       })
   }
 
@@ -32,15 +38,23 @@ class ForgotPasswordController {
       this.userService
         .resetPassword(this.resetPassword.password, url)
         .then(data => {
-          console.log(data)
-          this.location.path('/#!')
+          this.passwordResetSuccess = true
+          this.resetPassword.password = ''
+          this.resetPassword.confirmPassword = ''
         })
         .catch(e => {
-          console.log('logging error in new password submit', e)
+          this.resetPasswordError = true
+          setTimeout(() => {
+            this.resetPasswordError = false
+            this.scope.$apply()
+          }, 10000)
         })
     } else {
-      this.resetPasswordError = 'The two passwords do not match'
-      console.log(this.resetPasswordError)
+      this.passwordNotMatch = true
+      setTimeout(() => {
+        this.passwordNotMatch = false
+        this.scope.$apply()
+      }, 10000)
     }
   }
 }

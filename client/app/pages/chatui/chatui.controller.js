@@ -1,8 +1,6 @@
 import io from 'socket.io-client'
 class ChatUiController {
-  constructor($routeParams, $location, $timeout, $scope, moment) {
-    this.routeParams = $routeParams
-    this.location = $location
+  constructor($timeout, $scope, moment, $location, $anchorScroll) {
     this.scope = $scope
     this.socket = undefined
     this.timeout = $timeout
@@ -14,6 +12,8 @@ class ChatUiController {
     this.currentFriend
     this.currentConversation
     this.disableInput = true
+    this.chatView = false
+    this.glued = true
   }
 
   $onDestroy() {
@@ -24,16 +24,21 @@ class ChatUiController {
   $onInit() {
     this.socket = io.connect()
     this.socket.on('userConnected', data => {
-      console.log(data)
       this.friends = data.myFriendsStatus
-      console.log(this.friends)
+
       this.conversations = data.myConversations
       this.user = data.user
+
       this.socketEventListen()
+
       this.scope.$apply()
     })
   }
+  setFriendListView() {
+    this.chatView = false
+  }
   selectFriend(friendId) {
+    this.chatView = true
     let index = this.conversations.findIndex(x => {
       if (x.userone === friendId || x.usertwo === friendId) {
         return x
@@ -41,6 +46,7 @@ class ChatUiController {
     })
     let friendIndex = this.friends.findIndex(x => x.friendId === friendId)
     this.currentConversation = this.conversations[index]
+
     this.currentFriend = this.friends[friendIndex]
     console.log(
       'logging this.conversation & this.friend',
@@ -84,6 +90,12 @@ class ChatUiController {
       let index = this.friends.findIndex(x => x.friendId === data.friendId)
       if (index > -1) {
         this.friends[index].status = 'online'
+      } else {
+        this.friends.push(data)
+      }
+      if (this.currentFriend && this.currentFriend.friendId === data.friendId) {
+        let message = 'is now online'
+        this.createNotification(message)
       }
       this.scope.$apply()
     })
@@ -92,6 +104,10 @@ class ChatUiController {
       let index = this.friends.findIndex(x => x.friendId === data.friendId)
       if (index > -1) {
         this.friends[index].status = 'offline'
+      }
+      if (this.currentFriend && this.currentFriend.friendId === data.friendId) {
+        let message = 'has disconnected'
+        this.createNotification(message)
       }
       this.scope.$apply()
     })
@@ -145,6 +161,18 @@ class ChatUiController {
     } else {
       return 'chat-message-from-me'
     }
+  }
+
+  createNotification(message) {
+    this.notification = message
+    setTimeout(() => {
+      this.notification = false
+      console.log(this.notification)
+      this.scope.$apply()
+    }, 2000)
+  }
+  styleStatus(status) {
+    return status === 'online' ? 'online' : 'offline'
   }
 }
 

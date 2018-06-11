@@ -63,7 +63,7 @@ router.get('/friend-request/accept/:id', authenticate, (req, res) => {
         friendShip: friendShip,
         acceptor: req.user
       })
-      res.send({ friendShip })
+      return res.send({ friendShip })
     } catch (e) {
       log.error('unable to confirm firend request', e)
       res.status(400).send()
@@ -162,7 +162,6 @@ notificationEvents.on('fRAccepted', data => {
       )
     }
   }
-
   saveUserFriend()
 })
 

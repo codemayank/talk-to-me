@@ -123,9 +123,6 @@ userSchema.statics.createResetPasswordToken = function(email, host) {
           }
         })
       })
-      .catch(e => {
-        console.log('error in redet password', e)
-      })
   } else {
     return 'email service has been disabled. so password reset cannot be used.'
   }

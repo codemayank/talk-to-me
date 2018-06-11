@@ -8,6 +8,25 @@ body {
   .mdl-navigation__link:last-of-type {
   padding-right: 0;
 }
+.chat-header {
+  padding: 10px 16px;
+  background: transparent;
+  color: black;
+}
+
+.chat-content {
+  padding: 16px;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.sticky + .chat-content {
+  padding-top: 102px;
+}
 
 .main-content {
   padding-top: 20px;
@@ -67,7 +86,7 @@ body {
 .message-time {
   margin: 0 !important;
   font-size: 12px;
-  color: #9a9a9a;
+  color: rgb(63, 204, 204);
 }
 
 .message-body {
@@ -77,19 +96,48 @@ body {
 
 .message-main-receiver {
   padding: 10px 20px;
-  max-width: 60%;
+  max-width: 100%;
   display: flex;
   justify-content: flex-start;
 }
 
 .message-main-sender {
-  padding: 10px 20px !important;
-  margin-left: 40% !important;
-  max-width: 60%;
+  padding: 10px 10px !important;
+  margin-left: 0% !important;
+  max-width: 100%;
   display: flex;
   justify-content: flex-end;
 }
 
 a {
   cursor: pointer;
+}
+
+.material-icons,
+.icon-text {
+  vertical-align: middle;
+}
+
+.online {
+  color: lightgreen;
+}
+.offline {
+  color: grey;
+}
+
+.chat-layout-header {
+  padding-left: 24px !important;
+}
+
+.chat-search {
+  margin-left: 30px;
+  max-width: 200px;
+}
+
+.error-message {
+  background: lightsalmon;
+}
+
+.success-message {
+  background: greenyellow;
 }

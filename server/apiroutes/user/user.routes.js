@@ -25,7 +25,7 @@ router.get(
   '/auth/google/redirect',
   passport.authenticate('google'),
   (req, res) => {
-    res.redirect('/user/welcome')
+    res.redirect('/#!/user/dashboard')
   }
 )
 
@@ -108,6 +108,7 @@ router.get('/status', authenticate, (req, res) => {
 })
 
 router.get('/details', authenticate, (req, res) => {
+  //fetch all of users friends from the db
   FriendShip.find({
     $or: [{ friend1: req.user._id }, { friend2: req.user._id }]
   })
@@ -116,9 +117,10 @@ router.get('/details', authenticate, (req, res) => {
     .then(friendships => {
       let friendShips = friendships
 
-      return User.find({}, 'username')
+      return User.find({}, 'username') //fetch all the users registered on the app
         .lean()
         .then(users => {
+          //remove the requesting user from this list
           users.splice(
             users.findIndex(
               x => x._id.toHexString() === req.user._id.toHexString()
@@ -128,6 +130,7 @@ router.get('/details', authenticate, (req, res) => {
           let usersList = users
 
           friendShips.forEach(friendShip => {
+            //remove all the users confirmed and unconfirmed friends from the users list.
             users.forEach(user => {
               if (
                 friendShip.friend1._id.toHexString() ===
@@ -141,7 +144,7 @@ router.get('/details', authenticate, (req, res) => {
               }
             })
           })
-
+          //get all of users notifications
           User.populate(req.user, { path: 'notifications' }).then(user => {
             res.send({
               usersList: usersList,
