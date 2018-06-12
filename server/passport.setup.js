@@ -68,7 +68,7 @@ let sessionMiddleware = session({
   saveUninitialized: true,
   resave: true,
   store: new MongoStore({
-    url: process.env.DATABASE_URL
+    url: process.env.MONGODB_URI
   })
 })
 module.exports = { sessionMiddleware }
