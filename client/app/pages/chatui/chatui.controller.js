@@ -1,6 +1,7 @@
 import io from 'socket.io-client'
 class ChatUiController {
   constructor($timeout, $scope, moment, $location, $anchorScroll) {
+    'ngInject'
     this.scope = $scope
     this.socket = undefined
     this.timeout = $timeout
@@ -172,7 +173,11 @@ class ChatUiController {
     }, 2000)
   }
   styleStatus(status) {
-    return status === 'online' ? 'online' : 'offline'
+    if (status === 'online') {
+      return 'online'
+    } else {
+      return 'offline'
+    }
   }
 }
 

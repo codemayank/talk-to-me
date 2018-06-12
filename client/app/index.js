@@ -14,14 +14,14 @@ import UserService from './services/user.service'
 import FriendService from './services/friend.service'
 import userDashboardComponent from './pages/userdashboard/userdashboard'
 import chatUiComponent from './pages/chatui/chatui'
-// import angularLoadingBar from 'angular-loading-bar'
-// import '../../node_modules/angular-loading-bar/build/loading-bar.min.css'
+import angularLoadingBar from 'angular-loading-bar'
+import '../../node_modules/angular-loading-bar/build/loading-bar.min.css'
 
 angular
   .module('app', [
     ngRoute,
     angularMoment,
-    // angularLoadingBar,
+    angularLoadingBar,
     HomeComponent.name,
     ForgotPasswordComponent.name,
     userDashboardComponent.name,

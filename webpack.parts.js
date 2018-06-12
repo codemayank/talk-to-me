@@ -10,6 +10,10 @@ exports.autoprefix = () => ({
   }
 })
 
+exports.generateSourceMaps = ({ type }) => ({
+  devtool: type,
+});
+
 exports.minifyJavaScript = () => ({
   optimization: {
     minimizer: [new UglifyWebpackPlugin({ sourceMap: true })]

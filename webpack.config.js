@@ -59,17 +59,14 @@ const productionConfig = merge([
   parts.extractCSS({
     use: ['css-loader', parts.autoprefix()]
   }),
-  parts.purifyCSS({
-    paths: glob.sync(`${PATHS.app}/**/*.html`, {
-      nodir: true
-    })
-  }),
+
   parts.loadImages({
     options: {
       limit: 15000,
       name: '[name].[ext]'
     }
-  })
+  }),
+  parts.generateSourceMaps({ type: 'source-map' })
 ])
 
 const developmentConfig = merge([parts.loadCSS(), parts.loadImages()])

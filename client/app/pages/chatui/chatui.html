@@ -50,11 +50,13 @@
             <div class="mdl-grid" ng-if="vm.chatView">
                 <div class="mdl-cell mdl-cell--9-col mdl-cell--1-offset-desktop" style="padding-bottom: 50px;">
 
-                    <div class="chat" ng-repeat="message in vm.currentConversation.messages track by $index" id="{{$index}}" ng-class="vm.alignMessage(message)">
-                        <div class="chat-message" ng-class="vm.messageOwner(message)">
-                            <span class="message-text">{{message.text}}</span>
-                            <div class="chat-message-time">
-                                <span class="message-time">{{message.createdAt |amCalendar:referenceTime:formats }}</span>
+                    <div class="chat" ng-repeat="message in vm.currentConversation.messages track by $index">
+                        <div ng-class="vm.alignMessage(message)">
+                            <div class="chat-message" ng-class="vm.messageOwner(message)">
+                                <span class="message-text">{{message.text}}</span>
+                                <div class="chat-message-time">
+                                    <span class="message-time">{{message.createdAt |amCalendar:referenceTime:formats }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
