@@ -7,6 +7,7 @@
     "start": "node index.js",
     "dev": "webpack --env development ./client/app/index.js --watch",
     "build": "webpack --env production ./client/app/index.js",
+    "heroku-postbuild": "webpack --env production ./client/app/index.js",
     "build:stats": "webpack --env production ./client/app/index.js --json > stats.json"
   },
   "engines": {
