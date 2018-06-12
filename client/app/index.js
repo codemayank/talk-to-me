@@ -1,3 +1,8 @@
+/**
+ * Main client index file
+ */
+
+//load all the dependencies, modules, services
 import angular from 'angular'
 import ngRoute from 'angular-route'
 import '../../node_modules/material-design-lite/material.min.css'
@@ -17,6 +22,7 @@ import chatUiComponent from './pages/chatui/chatui'
 import angularLoadingBar from 'angular-loading-bar'
 import '../../node_modules/angular-loading-bar/build/loading-bar.min.css'
 
+//define the root module app
 angular
   .module('app', [
     ngRoute,
@@ -27,8 +33,9 @@ angular
     userDashboardComponent.name,
     chatUiComponent.name
   ])
+  //register the services
   .factory('UserService', ['$http', '$q', UserService])
   .factory('FriendService', ['$http', '$q', FriendService])
-
+  //configure routes and navigation checks
   .config(routes)
   .run(routeAuthCheck)

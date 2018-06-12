@@ -1,3 +1,7 @@
+/**
+ * Forgot password controller
+ */
+
 class ForgotPasswordController {
   constructor(UserService, $scope, $routeParams, $location) {
     'ngInject'
@@ -10,13 +14,14 @@ class ForgotPasswordController {
   }
 
   $onInit() {
+    //on initialisation of the component check if token exists in the url to load appropriate page
     if (this.routeParams.token === 'noToken') {
       this.showForgotPasswordForm = true
     } else {
       this.showForgotPasswordForm = false
     }
   }
-
+  //function to submit the email to the server requesting token for new password
   onEmailSubmit() {
     this.userService
       .forgotPassword(this.forgotPasswordForm)
@@ -31,7 +36,7 @@ class ForgotPasswordController {
         }, 10000)
       })
   }
-
+  //function to submit new password to server to change password
   onNewPasswordSubmit() {
     if (this.resetPassword.password === this.resetPassword.confirmPassword) {
       let url = '/user/reset-password/' + this.routeParams.token

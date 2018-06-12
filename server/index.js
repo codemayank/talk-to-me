@@ -64,6 +64,7 @@ http.listen(port, () => {
   log.info(`Server listening at port ${port}`)
 })
 
+//Mount chat sockets.
 const chatSockets = require('./sockets/chat.sockets')
 chatSockets.controller(http)
 module.exports = { app }

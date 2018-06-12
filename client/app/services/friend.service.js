@@ -1,6 +1,11 @@
+/**
+ *  friend service
+ */
+
 function FriendService($http, $q) {
   'ngInject'
   return {
+    //service function to send friend request data to server
     sendFriendRequest(friendId) {
       let deferred = $q.defer()
       $http({
@@ -18,6 +23,8 @@ function FriendService($http, $q) {
         })
       return deferred.promise
     },
+
+    //service function to send friend request cancellation request to server
     cancelFriendRequest(friendId) {
       let deferred = $q.defer()
       $http({
@@ -32,6 +39,8 @@ function FriendService($http, $q) {
         })
       return deferred.promise
     },
+
+    //service function to send friend request acceptance request to the server
     acceptFriendRequest(friendId) {
       let deferred = $q.defer()
       $http({

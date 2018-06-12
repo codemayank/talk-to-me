@@ -1,3 +1,7 @@
+/**
+ * home component module
+ */
+
 import angular from 'angular'
 
 import homeComponent from './home.component'

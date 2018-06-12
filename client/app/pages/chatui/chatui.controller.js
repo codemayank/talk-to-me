@@ -1,7 +1,12 @@
+/**
+ * Chat ui controller module
+ */
+
 import io from 'socket.io-client'
 class ChatUiController {
   constructor($timeout, $scope, moment, $location, $anchorScroll) {
     'ngInject'
+    //define all scope variables and methods
     this.scope = $scope
     this.socket = undefined
     this.timeout = $timeout
@@ -18,12 +23,14 @@ class ChatUiController {
   }
 
   $onDestroy() {
+    //when this component is destroyed i.e. app moves to other component the socket disconnectes
     this.socket.disconnect()
-    console.log('the socket was disconnected')
   }
 
   $onInit() {
+    //connect with socketio server
     this.socket = io.connect()
+    //listen to user connected events
     this.socket.on('userConnected', data => {
       this.friends = data.myFriendsStatus
 
@@ -38,6 +45,8 @@ class ChatUiController {
   setFriendListView() {
     this.chatView = false
   }
+
+  //function to select friend with friendId in the friends list to set current friend and load chat page
   selectFriend(friendId) {
     this.chatView = true
     let index = this.conversations.findIndex(x => {
@@ -49,11 +58,6 @@ class ChatUiController {
     this.currentConversation = this.conversations[index]
 
     this.currentFriend = this.friends[friendIndex]
-    console.log(
-      'logging this.conversation & this.friend',
-      this.conversation,
-      this.currentFriend
-    )
     this.disableInput = false
   }
 
@@ -63,6 +67,7 @@ class ChatUiController {
       to: this.currentFriend.username,
       text: this.newMessage
     }
+    //socket event emitter to emit new messages to server
     this.socket.emit(
       'newMessage',
       {
@@ -71,7 +76,6 @@ class ChatUiController {
         friendId: this.currentFriend.friendId
       },
       data => {
-        console.log(data)
         this.currentConversation.messages.push(data.message)
         this.newMessage = ''
         this.scope.$apply()
@@ -79,6 +83,7 @@ class ChatUiController {
     )
   }
   socketEventListen() {
+    //socket event listener to receive new messages from the socket io server
     this.socket.on('sendMessage', data => {
       let index = this.conversations.findIndex(x => x._id === data.conversation)
       if (index > -1) {
@@ -86,8 +91,9 @@ class ChatUiController {
       }
       this.scope.$apply()
     })
+
+    //socket event listener to receive new friend joined data
     this.socket.on('friendJoined', data => {
-      console.log('friend joined', data)
       let index = this.friends.findIndex(x => x.friendId === data.friendId)
       if (index > -1) {
         this.friends[index].status = 'online'
@@ -100,8 +106,9 @@ class ChatUiController {
       }
       this.scope.$apply()
     })
+
+    //socket event listener to receive disconnected friends data
     this.socket.on('friendDisconnected', data => {
-      console.log('friend disconnedted', data)
       let index = this.friends.findIndex(x => x.friendId === data.friendId)
       if (index > -1) {
         this.friends[index].status = 'offline'
@@ -112,12 +119,14 @@ class ChatUiController {
       }
       this.scope.$apply()
     })
+
+    //socket event listener to listen to user / friend typing events
     this.socket.on('friendTyping', data => {
-      console.log('a friend is typing')
-      console.log(data)
       this.friendTyping = data.friendId
       this.scope.$apply()
     })
+
+    //socket event listener to listen to user / friend stopped typing events
     this.socket.on('friendStoppedTyping', data => {
       console.log('a friend has stopped typing')
       this.friendTyping = ''
@@ -125,14 +134,15 @@ class ChatUiController {
     })
   }
 
+  //function to emit user typing events to the socket server whenever user types something in the message box
   onKeyDown() {
-    console.log('logging on key down')
     if (this.typing === false) {
       this.typing = true
       this.socket.emit('startedTyping', {
         friendId: this.currentFriend.friendId
       })
       this.timeOutVar = setTimeout(() => {
+        //if user does not type anything in 500ms from then stopped typing event is emitted to the server
         this.typing = false
         this.socket.emit('stoppedTyping', {
           friendId: this.currentFriend.friendId
@@ -149,6 +159,7 @@ class ChatUiController {
     }
   }
 
+  //function to apply css classes to messages
   alignMessage(message) {
     if (message.from !== this.user.username) {
       return 'message-main-receiver'
@@ -163,7 +174,7 @@ class ChatUiController {
       return 'chat-message-from-me'
     }
   }
-
+  //function to create new notifications based on user status changes
   createNotification(message) {
     this.notification = message
     setTimeout(() => {
@@ -172,6 +183,8 @@ class ChatUiController {
       this.scope.$apply()
     }, 2000)
   }
+
+  //function to style the status bulb based on friends status
   styleStatus(status) {
     if (status === 'online') {
       return 'online'

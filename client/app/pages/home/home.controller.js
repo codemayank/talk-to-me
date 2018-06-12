@@ -1,3 +1,7 @@
+/**
+ * Home component controller
+ */
+
 class HomeComponentController {
   constructor(UserService, $scope, $location) {
     'ngInject'
@@ -6,19 +10,16 @@ class HomeComponentController {
     this.location = $location
     this.scope = $scope
   }
-
+  //handle new user registration
   onUserRegister() {
     if (this.reg.password === this.reg.confirmPassword) {
       this.regForm.password = this.reg.password
       this.userService
         .registerUser(this.regForm)
         .then(data => {
-          console.log('logging user data', data)
           this.location.path('/user/dashboard')
         })
         .catch(e => {
-          console.log('error registering user', e)
-
           let re2 = /email_1/g
 
           if (e.data.errmsg && re2.test(e.data.errmsg)) {
@@ -31,7 +32,7 @@ class HomeComponentController {
         })
     } else {
       this.errorDisp = 'Passwords do not match please try again!'
-      console.log('passwords not matching', this.errorDisp)
+
       setTimeout(() => {
         this.errorDisp = null
         this.scope.$apply()
@@ -39,15 +40,14 @@ class HomeComponentController {
     }
   }
 
+  //handle user login
   onUserLogin() {
     this.userService
       .loginUser(this.loginForm)
       .then(data => {
-        console.log('user logged in', data)
         this.location.path('/user/dashboard')
       })
       .catch(e => {
-        console.log('errorin authenticating the user', e)
         if (e.status === 401 || e.status === 500) {
           this.errorDisp = 'Incorrect email address or password!'
           setTimeout(() => {

@@ -1,3 +1,7 @@
+/**
+ * user model module
+ */
+
 const bcrypt = require('bcryptjs')
 const mongoose = require('mongoose')
 const validator = require('validator')
@@ -5,6 +9,7 @@ const crypto = require('crypto')
 const nodemailer = require('nodemailer')
 const _ = require('lodash')
 
+//setup the user model
 let userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -37,12 +42,15 @@ let userSchema = new mongoose.Schema({
   resetPasswordToken: String,
   resetPasswordExpires: Date
 })
+
+//to ensure that user password hash is not sent to the client
 userSchema.methods.toJSON = function() {
   let user = this.toObject()
   delete user['password']
   return user
 }
 
+//function to hash user password before saving to the database
 userSchema.pre('save', function(next) {
   let user = this
   if (!user.isModified('password')) {
@@ -57,6 +65,7 @@ userSchema.pre('save', function(next) {
   })
 })
 
+//function to verify user password during login
 userSchema.statics.findByCredentials = function(email, password) {
   let User = this
   return User.findOne({
@@ -66,6 +75,7 @@ userSchema.statics.findByCredentials = function(email, password) {
       return Promise.reject('Loginerr1')
     }
     return new Promise((resolve, reject) => {
+      //compare user entered password with the hash stored in the db
       bcrypt.compare(password, user.password, (err, res) => {
         if (res) {
           resolve(user)
@@ -79,6 +89,7 @@ userSchema.statics.findByCredentials = function(email, password) {
   })
 }
 
+//schema statics to handle reset password
 userSchema.statics.createResetPasswordToken = function(email, host) {
   if (process.env.USE_EMAIL) {
     let User = this
@@ -127,6 +138,8 @@ userSchema.statics.createResetPasswordToken = function(email, host) {
     return 'email service has been disabled. so password reset cannot be used.'
   }
 }
+
+//user schema statics to handle change password
 userSchema.statics.changePassword = function(token, newPassword) {
   if (process.env.USE_EMAIL) {
     let User = this

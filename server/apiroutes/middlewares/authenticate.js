@@ -1,3 +1,4 @@
+//middleware to check if the user is authenticated
 module.exports.AuthCheck = function(req, res, next) {
   if (!req.isAuthenticated()) {
     //executes if user is not logged in.

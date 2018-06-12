@@ -1,3 +1,7 @@
+/**
+ * Setup passport for autheitication
+ */
+
 const passport = require('passport')
 const GoogleStrategy = require('passport-google-oauth20')
 const LocalStrategy = require('passport-local')
@@ -14,22 +18,21 @@ passport.deserializeUser((id, done) => {
     done(null, user)
   })
 })
+
+//set up passport google strategy
 passport.use(
   new GoogleStrategy(
     {
-      //optopm fpr the google strategy.
       callbackURL: '/user/auth/google/redirect',
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET
     },
     (accessToken, refreshToken, profile, done) => {
-      //passport callback function
-
       //check if use already exists in our database.
       User.findOne({ google_id: profile.id }).then(currentUser => {
         if (currentUser) {
           //already found user
-          console.log('found user in database', currentUser)
+
           done(null, currentUser)
         } else {
           //create a new user in db
@@ -47,7 +50,7 @@ passport.use(
     }
   )
 )
-//new local strategy for authentication
+//local strategy for authentication
 passport.use(
   new LocalStrategy(
     { usernameField: 'email', passwordField: 'password' },
@@ -63,6 +66,7 @@ passport.use(
   )
 )
 
+//setup session middleware
 let sessionMiddleware = session({
   secret: process.env.COOKIE_KEY,
   saveUninitialized: true,

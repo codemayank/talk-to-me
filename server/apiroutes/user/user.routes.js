@@ -10,6 +10,7 @@ const authenticate = require('../middlewares/authenticate').AuthCheck
 const log = require('../../logger')
 const FriendShip = require('../friendships/friendship.model')
 
+//route to handle google signin
 router.get(
   '/signin/google',
   passport.authenticate(
@@ -21,6 +22,7 @@ router.get(
   )
 )
 
+//google login redirect route
 router.get(
   '/auth/google/redirect',
   passport.authenticate('google'),
@@ -29,10 +31,7 @@ router.get(
   }
 )
 
-router.get('/welcome', (req, res) => {
-  res.send('hello you have registered using google.')
-})
-
+//route to handle new user registration
 router.post('/register', (req, res) => {
   if (req.body.username && req.body.email && req.body.password) {
     let newUser = new User(_.pick(req.body, ['username', 'email', 'password']))
@@ -53,6 +52,7 @@ router.post('/register', (req, res) => {
   }
 })
 
+//route to handle user login
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) {
@@ -75,12 +75,14 @@ router.post('/login', (req, res, next) => {
   })(req, res, next)
 })
 
+//route to handle user logout
 router.get('/logout', authenticate, (req, res) => {
   //log user out from the network;
   req.logout()
   res.send('loggedout')
 })
 
+//route to handle forgot password request
 router.post('/forgot-password', (req, res) => {
   User.createResetPasswordToken(req.body.email, req.headers.host)
     .then(() => {
@@ -90,9 +92,13 @@ router.post('/forgot-password', (req, res) => {
       res.status(400).send(e)
     })
 })
+
+//route to load the reset password page
 router.get('/reset-password/:token', (req, res) => {
   res.redirect('/#!/reset-password/' + req.params.token)
 })
+
+//route to handle reset password request
 router.post('/reset-password/:token', (req, res) => {
   User.changePassword(req.params.token, req.body.newPassword)
     .then(() => {
@@ -103,10 +109,12 @@ router.post('/reset-password/:token', (req, res) => {
     })
 })
 
+//route to provide the login status of the user
 router.get('/status', authenticate, (req, res) => {
   res.status(200).send(true)
 })
 
+//route to provide user details
 router.get('/details', authenticate, (req, res) => {
   //fetch all of users friends from the db
   FriendShip.find({
@@ -159,16 +167,4 @@ router.get('/details', authenticate, (req, res) => {
     })
 })
 
-// router.get('/user-list', authenticate, (req, res) => {
-//   User.find({}, 'username email')
-//     .lean()
-//     .then(userList => {
-//       userList.splice(userList.findIndex(x => x._id == req.user._id), 1)
-
-//       res.send({ userList })
-//     })
-//     .catch(e => {
-//       log.error('error getting user list', e)
-//     })
-// })
 module.exports = router

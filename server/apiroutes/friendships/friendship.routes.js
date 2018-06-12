@@ -1,3 +1,7 @@
+/**
+ * Friendship routes
+ */
+
 const router = require('express').Router()
 const User = require('../user/user.model')
 const FriendShip = require('./friendship.model')
@@ -8,6 +12,7 @@ const events = require('events')
 const notificationEvents = new events.EventEmitter()
 const log = require('../../logger')
 
+//route to handle new friend requests
 router.post('/friend-request', authenticate, (req, res) => {
   let friendId = req.body.friendId
   if (friendId == req.user._id) {
@@ -45,6 +50,7 @@ router.post('/friend-request', authenticate, (req, res) => {
       res.status(400).send()
     })
 })
+
 //route to handle friend request acceptance
 router.get('/friend-request/accept/:id', authenticate, (req, res) => {
   let id = req.params.id
@@ -95,6 +101,7 @@ router.get('/friend-request/cancel/:id', authenticate, (req, res) => {
   friendReqCancel()
 })
 
+//event listener to create notification when new friend request is sent
 notificationEvents.on('fRSent', data => {
   let newNotification = new Notification({
     message: `${data.requester.username} sent you a friend request`,
@@ -119,6 +126,7 @@ notificationEvents.on('fRSent', data => {
   handleFRSent()
 })
 
+//event listener to create notification and conversation on confirmation of new friend request
 notificationEvents.on('fRAccepted', data => {
   let newNotification = new Notification({
     message: `${data.acceptor.username} accepted your friend request`
@@ -165,6 +173,7 @@ notificationEvents.on('fRAccepted', data => {
   saveUserFriend()
 })
 
+//event listener create notification on cancellation of a friend request
 notificationEvents.on('fRCancelled', data => {
   let newNotification = new Notification({
     message: `${data.cancellor.username} declined your friend request.`

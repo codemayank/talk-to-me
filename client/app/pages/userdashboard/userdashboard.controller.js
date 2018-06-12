@@ -1,3 +1,7 @@
+/**
+ * user dashboard component controller
+ */
+
 class UserDashboardController {
   constructor(UserService, FriendService, $location, moment) {
     'ngInject'
@@ -32,7 +36,6 @@ class UserDashboardController {
       })
   }
   onAcceptFriendRequest(friendShipId) {
-    console.log('onAcceptFiendRequest fired', friendShipId)
     this.friendService
       .acceptFriendRequest(friendShipId)
       .then(data => {

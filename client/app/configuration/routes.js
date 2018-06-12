@@ -1,3 +1,7 @@
+/**
+ * routes configuration
+ */
+
 function routes($routeProvider, $locationProvider) {
   'ngInject'
   $routeProvider

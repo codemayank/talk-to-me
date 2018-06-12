@@ -1,7 +1,12 @@
+/**
+ * user service module
+ */
+
 function UserService($http, $q) {
   'ngInject'
   let user = null
   return {
+    //check if the user is logged in
     isLoggedIn() {
       if (user) {
         return true
@@ -9,6 +14,8 @@ function UserService($http, $q) {
         return false
       }
     },
+
+    //get user status from the server
     getUserStatus() {
       return $http({ method: 'GET', url: '/user/status' })
         .then(response => {
@@ -18,6 +25,8 @@ function UserService($http, $q) {
           user = false
         })
     },
+
+    //register user to the server
     registerUser(credentials) {
       let deferred = $q.defer()
 
@@ -35,6 +44,8 @@ function UserService($http, $q) {
 
       return deferred.promise
     },
+
+    //login user on the server
     loginUser(credentials) {
       let deferred = $q.defer()
 
@@ -51,9 +62,8 @@ function UserService($http, $q) {
         })
       return deferred.promise
     },
-
+    //submit user email to server for forgot password
     forgotPassword(credentials) {
-      console.log(credentials)
       let deferred = $q.defer()
 
       $http({
@@ -70,7 +80,7 @@ function UserService($http, $q) {
 
       return deferred.promise
     },
-
+    //reset password
     resetPassword(credentials, url) {
       let deferred = $q.defer()
       $http({
@@ -89,6 +99,7 @@ function UserService($http, $q) {
 
       return deferred.promise
     },
+
     logout() {
       let deferred = $q.defer()
       $http
@@ -101,6 +112,7 @@ function UserService($http, $q) {
         })
       return deferred.promise
     },
+    //user service function to get all the data required on user dashboard
     getDashboardData() {
       let deferred = $q.defer()
 
@@ -111,7 +123,6 @@ function UserService($http, $q) {
           let usersList = response.data.usersList
           let userDetails = response.data.user
           let friendShips = response.data.friendShips
-
           let friends = []
           let fromFriendRequestPending = []
           let toFriendRequestPending = []

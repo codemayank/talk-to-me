@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 
+//set up the friendship model
 let friendShipSchema = new mongoose.Schema({
   friend1: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   friend2: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },

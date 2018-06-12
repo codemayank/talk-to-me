@@ -1,3 +1,4 @@
+//function to check if the user is logged in before loading a restricted route
 function authRouteCheck($rootScope, $location, $route, $timeout, UserService) {
   'ngInject'
   $rootScope.$on('$routeChangeStart', function(event, next, current) {
