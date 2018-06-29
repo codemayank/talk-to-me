@@ -128,7 +128,6 @@ class ChatUiController {
 
     //socket event listener to listen to user / friend stopped typing events
     this.socket.on('friendStoppedTyping', data => {
-      console.log('a friend has stopped typing')
       this.friendTyping = ''
       this.scope.$apply()
     })
@@ -179,7 +178,7 @@ class ChatUiController {
     this.notification = message
     setTimeout(() => {
       this.notification = false
-      console.log(this.notification)
+
       this.scope.$apply()
     }, 2000)
   }

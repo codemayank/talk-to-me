@@ -5,7 +5,6 @@ function authRouteCheck($rootScope, $location, $route, $timeout, UserService) {
     if (next.access.restricted) {
       UserService.getUserStatus().then(() => {
         if (!UserService.isLoggedIn()) {
-          console.log('restricted')
           $location.path('/')
           $route.reload()
         }
