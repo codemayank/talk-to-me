@@ -31,7 +31,8 @@ git clone https://github.com/codemayank/talk-to-me.git
 
 ```
 PORT= #add port no. to serve your app from
-DATABASE_URL= #URL of the mongodb server
+MONGODB_URI=#Database url
+REDISCLOUD_URL=#Redis Database url
 GOOGLE_CLIENT_ID = #your google client id for google oauth
 GOOGLE_CLIENT_SECRET = # your google client secret for google oauth
 EMAIL_SERVICE = # the email service you would be using for this application
