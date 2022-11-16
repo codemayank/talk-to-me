@@ -65,7 +65,7 @@
     "file-loader": "^1.1.11",
     "glob": "^7.1.2",
     "html-loader": "^0.5.5",
-    "html-webpack-plugin": "^3.2.0",
+    "html-webpack-plugin": "^5.5.0",
     "inspectpack": "^3.0.1",
     "mini-css-extract-plugin": "^0.4.0",
     "postcss-loader": "^2.1.5",
